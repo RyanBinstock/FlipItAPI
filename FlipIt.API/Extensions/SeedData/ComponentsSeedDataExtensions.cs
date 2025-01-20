@@ -87,7 +87,7 @@ namespace FlipIt.API.Extensions.SeedData
                     PartId = Guid.Parse("dcff96b3-a4c6-4454-8d89-dbb70562d712"), //STORAGE
                     Name = "ORICO SSD",
                     Price = 67.79,
-                    Details = "1tb m.2 NVMw",
+                    Details = "1tb m.2 NVMe",
                     VendorId = Guid.Parse("2d818341-be49-420b-ae01-d375c460756a")
                 },
                 new Component()

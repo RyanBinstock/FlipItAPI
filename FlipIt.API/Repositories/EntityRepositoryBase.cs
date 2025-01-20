@@ -18,11 +18,11 @@ namespace FlipIt.API.Repositories
 
         public async Task<T> AddAsync(T item, CancellationToken cancellationToken)
         {
-            var dbEntry = await _context.AddAsync(item, cancellationToken); 
+            var dbEntry = await _context.Set<T>().AddAsync(item, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return item;
+            return dbEntry.Entity;
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -38,9 +38,16 @@ namespace FlipIt.API.Repositories
             return item;
         }
 
-        public Task<T> UpdateAsync(T item, CancellationToken cancellationToken)
+        public async Task<T> UpdateAsync(T item, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (!await _context.Set<T>().AnyAsync(x => x.Id == item.Id, cancellationToken))
+            {
+                throw new EFMissingEntryException($"The given entity was not found in the database to update. Item Id: [{item.Id}]");
+            }
+
+            var dbEntry = _context.Set<T>().Update(item);
+            await _context.SaveChangesAsync(cancellationToken);
+            return dbEntry.Entity;
         }
     }
 }
